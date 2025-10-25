@@ -19,17 +19,32 @@ public class GameCollection {
         return gameList;
     }
 
-    public void addGame(Game game) {
+    public boolean addGame(Game game) {
+        if (getGameById(game.id) != null){
+            return false;
+        }
         this.gameList.add(game);
+        return true;
     }
 
-    public void updateGame(Integer id, Game gameUpdated) {
+    public Game getGameById(int id){
+        for (Game game : gameList){
+            if (game.id == id){
+                return game;
+            }
+        }
+        return null;
+    }
+
+    public Boolean updateGame(Integer id, Game gameUpdated) {
         for (Game game : this.gameList) {
             if (game.getId() == id) {
                 game.setName(gameUpdated.getName());
                 game.setGender(gameUpdated.getGender());
+                return true;
             }
         }
+        return false;
     }
 
     public boolean deleteGame(Integer id) {

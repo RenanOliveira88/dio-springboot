@@ -1,6 +1,7 @@
 package edu.dio.springboot.exercises.demospringboot.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import edu.dio.springboot.exercises.demospringboot.Model.Game;
 import edu.dio.springboot.exercises.demospringboot.Model.GameCollection;
+import edu.dio.springboot.exercises.demospringboot.exception.ResourceNotFoundException;
 
 @RestController
 @RequestMapping("/games")
@@ -33,21 +35,31 @@ public class GameCollectionController {
     }
     
     @GetMapping
-    public String getGames(){
-        return this.gameCollection.toString();
+    public ResponseEntity<String> getGames(){
+        if (this.gameCollection == null){
+            throw new RuntimeException("Erro fatal, a coleção de jogos não foi criada. \n Reinicie a aplicação.");
+        }
+        return ResponseEntity.ok(this.gameCollection.toString());
     }
     @PostMapping
-    public Game addGame(@RequestBody Game newGame){
-        this.gameCollection.addGame(newGame);
-        return newGame;
+    public ResponseEntity<Game> addGame(@RequestBody Game newGame){
+        if (!this.gameCollection.addGame(newGame)){
+            throw new RuntimeException("Não foi possível cadastrar o jogo com esse ID.");
+        }
+        return ResponseEntity.ok(newGame);
     }
     @PutMapping("/{id}")
-    public Game updateGame(@PathVariable Integer id, @RequestBody Game gameUpdated){
-        this.gameCollection.updateGame(id, gameUpdated);
-        return gameUpdated;
+    public ResponseEntity<Game> updateGame(@PathVariable Integer id, @RequestBody Game gameUpdated){
+        if(!this.gameCollection.updateGame(id, gameUpdated)){
+            throw new ResourceNotFoundException("Jogo não encontrado.");
+        }
+        return ResponseEntity.ok(gameUpdated);
     }
     @DeleteMapping("/{id}")
-    public boolean deleteGame(@PathVariable Integer id){
-        return this.gameCollection.deleteGame(id);
+    public ResponseEntity<Void> deleteGame(@PathVariable Integer id){
+        if (!this.gameCollection.deleteGame(id)){
+            throw new ResourceNotFoundException("Jogo não encontrado.");
+        }
+        return ResponseEntity.noContent().build();
     }
 }
