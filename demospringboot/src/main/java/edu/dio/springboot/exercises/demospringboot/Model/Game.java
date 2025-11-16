@@ -1,7 +1,16 @@
 package edu.dio.springboot.exercises.demospringboot.Model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class Game {
-    int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
+
     String name;
     String gender;
 
@@ -12,16 +21,16 @@ public class Game {
         this.gender = gender;
     }
     
-    public Game(int id, String name, String gender){
+    public Game(Long id, String name, String gender){
         this.id = id;
         this.name = name;
         this.gender = gender;
     }
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
