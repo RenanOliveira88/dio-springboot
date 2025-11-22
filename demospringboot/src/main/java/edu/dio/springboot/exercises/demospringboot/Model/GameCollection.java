@@ -27,7 +27,7 @@ public class GameCollection {
         return true;
     }
 
-    public Game getGameById(int id){
+    public Game getGameById(Long id){
         for (Game game : gameList){
             if (game.id == id){
                 return game;
